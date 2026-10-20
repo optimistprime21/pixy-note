@@ -1,0 +1,121 @@
+/* Temel palet: ahşap + parşömen. Mevsimler sadece tarla ve vurgu renklerini değiştirir. */
+:root {
+  --outline: #3b2314;
+  --ink: #3b2314;
+  --ink-soft: #7a5a3a;
+
+  --wood: #b5763c;
+  --wood-2: #a7692f;
+  --wood-light: #d9a066;
+  --wood-hi: #f0c890;
+  --wood-dark: #6b3d1f;
+
+  --parchment: #f6e7c1;
+  --parchment-hi: #fff6dc;
+  --parchment-dark: #e2c88f;
+
+  --danger: #c0392b;
+  --shadow: rgba(30, 15, 5, 0.35);
+
+  /* Mevsime göre değişenler (varsayılan: ilkbahar) */
+  --field: #79b851;
+  --field-line: #6aa645;
+  --accent: #4f9d3a;
+  --accent-hi: #7ccf4f;
+}
+
+[data-season='summer'] {
+  --field: #9cc84b;
+  --field-line: #8ab83c;
+  --accent: #d89a1e;
+  --accent-hi: #f2c94c;
+}
+
+[data-season='fall'] {
+  --field: #bf9a4a;
+  --field-line: #ae8a3c;
+  --accent: #c8601e;
+  --accent-hi: #e8904a;
+}
+
+[data-season='winter'] {
+  --field: #dce8f2;
+  --field-line: #c9d9e7;
+  --accent: #3f7fb8;
+  --accent-hi: #7fb7e6;
+}
+
+/* ---- Ortak pikselli yüzeyler ---- */
+
+.wood {
+  background: repeating-linear-gradient(0deg, var(--wood) 0 14px, var(--wood-2) 14px 16px);
+  border: 3px solid var(--outline);
+  box-shadow:
+    inset 0 0 0 3px var(--wood-light),
+    inset 0 0 0 6px var(--wood-dark);
+}
+
+.px-panel {
+  background: var(--parchment);
+  border: 3px solid var(--outline);
+  box-shadow:
+    inset 0 0 0 3px var(--parchment-hi),
+    0 4px 0 var(--shadow);
+}
+
+.px-btn {
+  font: inherit;
+  color: var(--ink);
+  background: var(--wood-light);
+  border: 3px solid var(--outline);
+  box-shadow:
+    inset -3px -3px 0 var(--wood),
+    inset 3px 3px 0 var(--wood-hi);
+  padding: 4px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.px-btn:hover {
+  filter: brightness(1.08);
+}
+.px-btn:active,
+.px-btn.active {
+  box-shadow:
+    inset 3px 3px 0 var(--wood),
+    inset -3px -3px 0 var(--wood-hi);
+}
+.px-btn.active {
+  background: var(--accent-hi);
+}
+.px-btn:active {
+  transform: translateY(1px);
+}
+.px-btn.small {
+  padding: 2px 8px;
+  font-size: 15px;
+}
+.px-btn.primary {
+  background: var(--accent-hi);
+}
+.px-btn.danger {
+  background: #e58a7a;
+  box-shadow:
+    inset -3px -3px 0 #b85a4a,
+    inset 3px 3px 0 #f5b5a5;
+}
+
+input,
+select {
+  font: inherit;
+  color: var(--ink);
+  background: var(--parchment-hi);
+  border: 3px solid var(--outline);
+  box-shadow: inset 2px 2px 0 var(--parchment-dark);
+  padding: 3px 8px;
+  outline: none;
+}
+input:focus,
+select:focus {
+  border-color: var(--accent);
+}

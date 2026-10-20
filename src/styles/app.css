@@ -1,0 +1,826 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Pixelify Sans', monospace;
+  font-size: 17px;
+  color: var(--ink);
+  background: var(--wood-dark);
+  overflow: hidden;
+  user-select: none;
+}
+
+svg[shape-rendering='crispEdges'] {
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.muted {
+  color: var(--ink-soft);
+  opacity: 0.8;
+}
+
+.loading {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--parchment);
+  font-size: 24px;
+}
+
+/* ---- Yerleşim ---- */
+
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+}
+
+.main-row {
+  display: grid;
+  grid-template-columns: 270px 1fr;
+  min-height: 0;
+}
+
+.content {
+  min-width: 0;
+  min-height: 0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Üst bar ---- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--parchment-hi);
+  text-shadow: 2px 2px 0 var(--outline);
+  margin-right: 8px;
+}
+.clock,
+.gold {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 3px 12px;
+  box-shadow: inset 0 0 0 3px var(--parchment-hi);
+}
+.clock-season {
+  color: var(--accent);
+  font-weight: 600;
+}
+.spacer {
+  flex: 1;
+}
+.setting {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--parchment-hi);
+  text-shadow: 1px 1px 0 var(--outline);
+}
+.setting select {
+  padding: 1px 6px;
+}
+
+/* ---- Kenar çubuğu ---- */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-top: none;
+  min-height: 0;
+  overflow: hidden;
+}
+.search {
+  width: 100%;
+}
+.side-section {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+.side-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--parchment-hi);
+  font-size: 19px;
+  font-weight: 600;
+  text-shadow: 2px 2px 0 var(--outline);
+  margin-bottom: 6px;
+}
+.side-head span {
+  flex: 1;
+}
+.side-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 6px;
+  background: var(--parchment);
+  border: 3px solid var(--outline);
+  box-shadow: inset 0 0 0 2px var(--parchment-hi);
+  flex: 1;
+}
+.side-item {
+  font: inherit;
+  color: var(--ink);
+  text-align: left;
+  background: transparent;
+  border: 2px solid transparent;
+  padding: 4px 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+.side-item:hover {
+  background: var(--parchment-dark);
+  border-color: var(--outline);
+}
+.side-item.active {
+  background: var(--accent-hi);
+  border-color: var(--outline);
+}
+.side-item-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.side-item-sub {
+  font-size: 13px;
+  color: var(--ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.side-empty {
+  color: var(--ink-soft);
+  font-size: 15px;
+  padding: 6px;
+}
+
+/* ---- Belge başlığı (not ve tarla ortak) ---- */
+
+.note-view,
+.board-view {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+}
+.doc-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.title-input {
+  flex: 1;
+  font-size: 24px;
+  font-weight: 600;
+  padding: 4px 12px;
+}
+.hint {
+  color: var(--parchment);
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+/* ---- Not editörü ---- */
+
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+.editor-toolbar .sep {
+  width: 8px;
+}
+.paper {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 40px;
+  user-select: text;
+  cursor: text;
+  background-color: var(--parchment);
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0 31px,
+    rgba(139, 90, 43, 0.15) 31px 32px
+  );
+  background-attachment: local;
+  border: 3px solid var(--outline);
+  box-shadow:
+    inset 0 0 0 4px var(--parchment-hi),
+    0 4px 0 var(--shadow);
+}
+.ProseMirror {
+  outline: none;
+  min-height: 100%;
+  line-height: 32px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.ProseMirror p,
+.ProseMirror ul,
+.ProseMirror ol,
+.ProseMirror blockquote {
+  margin: 0;
+}
+.ProseMirror h1 {
+  font-size: 30px;
+  line-height: 64px;
+  color: var(--wood-dark);
+}
+.ProseMirror h2 {
+  font-size: 24px;
+  line-height: 64px;
+  color: var(--wood-dark);
+}
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: var(--ink-soft);
+  opacity: 0.6;
+  pointer-events: none;
+}
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 28px;
+}
+.ProseMirror ul[data-type='taskList'] {
+  list-style: none;
+  padding-left: 4px;
+}
+.ProseMirror ul[data-type='taskList'] li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.ProseMirror ul[data-type='taskList'] li > label {
+  margin-top: 7px;
+}
+.ProseMirror ul[data-type='taskList'] li > div {
+  flex: 1;
+}
+.ProseMirror ul[data-type='taskList'] li[data-checked='true'] > div {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.ProseMirror input[type='checkbox'] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  border: 3px solid var(--outline);
+  background: var(--parchment-hi);
+  cursor: pointer;
+}
+.ProseMirror input[type='checkbox']:checked {
+  background: var(--accent);
+  box-shadow: inset 0 0 0 2px var(--parchment-hi);
+}
+.ProseMirror blockquote {
+  border-left: 6px solid var(--wood);
+  margin-left: 0;
+  padding-left: 14px;
+  color: var(--ink-soft);
+}
+.ProseMirror code {
+  background: var(--parchment-dark);
+  padding: 0 4px;
+}
+.ProseMirror pre {
+  background: var(--outline);
+  color: var(--parchment);
+  padding: 8px 14px;
+  line-height: 24px;
+}
+.ProseMirror pre code {
+  background: none;
+  padding: 0;
+}
+.ProseMirror hr {
+  border: none;
+  border-top: 4px dashed var(--wood);
+  margin: 14px 0;
+}
+
+.backlinks {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--parchment);
+  font-size: 15px;
+}
+
+/* ---- Tarla (workflow tuvali) ---- */
+
+.board-canvas {
+  flex: 1;
+  min-height: 0;
+  border: 3px solid var(--outline);
+  box-shadow: 0 4px 0 var(--shadow);
+}
+.react-flow {
+  background: var(--field);
+  font-family: inherit;
+}
+.react-flow .react-flow__background-pattern.lines {
+  stroke: var(--field-line);
+}
+
+.palette {
+  display: flex;
+  gap: 4px;
+  padding: 9px;
+}
+.palette-item {
+  position: relative;
+  width: 74px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 2px 3px;
+  cursor: grab;
+  background: var(--parchment);
+  border: 3px solid var(--outline);
+  box-shadow: inset 2px 2px 0 var(--parchment-dark);
+}
+.palette-item:hover {
+  background: var(--accent-hi);
+  transform: translateY(-2px);
+}
+.palette-item:active {
+  cursor: grabbing;
+}
+.slot-num {
+  position: absolute;
+  top: 0;
+  left: 3px;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+.slot-label {
+  font-size: 13px;
+}
+
+.board-tools {
+  display: flex;
+  gap: 4px;
+}
+
+/* Düğümler */
+.pnode {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  min-width: 160px;
+  max-width: 260px;
+  background: var(--parchment);
+  border: 3px solid var(--outline);
+  box-shadow:
+    inset 0 0 0 3px var(--parchment-hi),
+    0 5px 0 var(--shadow);
+}
+.pnode.selected {
+  outline: 3px dashed var(--accent);
+  outline-offset: 4px;
+}
+.pnode.start {
+  background: #ffe9a0;
+}
+.pnode.end {
+  background: var(--wood-light);
+  box-shadow:
+    inset 0 0 0 3px var(--wood-hi),
+    0 5px 0 var(--shadow);
+}
+.pnode.decision {
+  background: #f3d9a4;
+  padding-bottom: 14px;
+}
+.pnode.note {
+  align-items: flex-start;
+  background: var(--parchment-hi);
+  max-width: 280px;
+}
+.pnode.task.status-sprout {
+  background: #e3f3c4;
+}
+.pnode.task.status-harvest {
+  background: #fff1a8;
+}
+.pnode-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.node-label {
+  overflow-wrap: anywhere;
+  line-height: 1.2;
+}
+.node-input {
+  width: 100%;
+  padding: 1px 4px;
+  font-size: 16px;
+}
+.node-select {
+  font-size: 13px;
+  padding: 0 4px;
+  margin-top: 4px;
+  border-width: 2px;
+  max-width: 100%;
+}
+.excerpt {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.2;
+}
+.status-tag {
+  align-self: flex-start;
+  font-size: 12px;
+  padding: 0 6px;
+  border: 2px solid var(--outline);
+  background: var(--parchment-dark);
+}
+.status-tag.sprout {
+  background: var(--accent-hi);
+}
+.status-tag.harvest {
+  background: #f2c94c;
+}
+.sprite-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  transition: transform 0.1s steps(2);
+}
+.sprite-btn:hover {
+  transform: translateY(-3px);
+}
+.handle-tag {
+  position: absolute;
+  font-size: 11px;
+  color: var(--ink-soft);
+  pointer-events: none;
+  opacity: 0;
+}
+.pnode.decision:hover .handle-tag,
+.pnode.decision.selected .handle-tag {
+  opacity: 1;
+}
+.handle-tag.yes {
+  right: 10px;
+  top: 2px;
+}
+.handle-tag.no {
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  padding-top: 6px;
+}
+
+.react-flow__handle {
+  width: 12px;
+  height: 12px;
+  border-radius: 0;
+  background: var(--accent-hi);
+  border: 3px solid var(--outline);
+}
+.react-flow__handle:hover {
+  background: var(--accent);
+}
+
+/* Bağlantılar: basamak taşlı patika görünümü */
+.react-flow__edge-path {
+  stroke: #5a3a1e;
+  stroke-width: 4;
+  stroke-dasharray: 12 6;
+}
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: var(--accent);
+}
+.react-flow__edge-textbg {
+  fill: var(--parchment);
+  stroke: var(--outline);
+  stroke-width: 2;
+}
+.react-flow__edge-text {
+  font-family: 'Pixelify Sans', monospace;
+  font-size: 14px;
+  fill: var(--ink);
+}
+.react-flow__connection-path {
+  stroke: var(--accent);
+  stroke-width: 4;
+  stroke-dasharray: 6 6;
+}
+
+.react-flow__minimap {
+  background: var(--parchment);
+  border: 3px solid var(--outline);
+}
+.react-flow__controls {
+  border: 3px solid var(--outline);
+  box-shadow: 0 4px 0 var(--shadow);
+}
+.react-flow__controls-button {
+  background: var(--wood-light);
+  border-bottom: 2px solid var(--outline);
+  color: var(--ink);
+}
+.react-flow__controls-button:hover {
+  background: var(--wood-hi);
+}
+.react-flow__controls-button svg {
+  fill: var(--ink);
+}
+
+/* ---- Karşılama ---- */
+
+.welcome {
+  flex: 1;
+  display: grid;
+  place-items: center;
+}
+.welcome-card {
+  max-width: 520px;
+  padding: 32px 40px;
+  text-align: center;
+}
+.welcome-card h1 {
+  margin: 12px 0;
+  color: var(--wood-dark);
+}
+.welcome-sprites {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+.welcome-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* ---- Diyalog ---- */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 15, 5, 0.45);
+  display: grid;
+  place-items: center;
+  z-index: 100;
+}
+.dialog {
+  min-width: 360px;
+  max-width: 480px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.dialog-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--wood-dark);
+}
+.dialog p {
+  margin: 0;
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ---- Mevsim efektleri ---- */
+
+.particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 50;
+}
+.particle {
+  position: absolute;
+  top: -20px;
+  width: 8px;
+  height: 8px;
+  opacity: 0.85;
+  animation-name: drift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes drift {
+  0% {
+    transform: translate(0, -20px) rotate(0deg);
+  }
+  25% {
+    transform: translate(30px, 25vh) rotate(90deg);
+  }
+  50% {
+    transform: translate(-10px, 50vh) rotate(180deg);
+  }
+  75% {
+    transform: translate(35px, 75vh) rotate(270deg);
+  }
+  100% {
+    transform: translate(0, 105vh) rotate(360deg);
+  }
+}
+.season-spring .particle {
+  background: #f4a6c8;
+  box-shadow: 2px 2px 0 #d97aa5;
+}
+.season-summer .particle {
+  width: 5px;
+  height: 5px;
+  background: #fff59a;
+  box-shadow: 0 0 6px 2px rgba(255, 245, 154, 0.6);
+}
+.season-fall .particle {
+  background: #d2691e;
+  box-shadow: 2px 2px 0 #8b3a0e;
+}
+.season-fall .particle:nth-child(3n) {
+  background: #e3a33a;
+}
+.season-fall .particle:nth-child(4n) {
+  background: #b23a1e;
+}
+.season-winter .particle {
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  box-shadow: 0 0 0 1px #c9d9e7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particles {
+    display: none;
+  }
+}
+
+/* ---- Vurgulama ve renkli bloklar ---- */
+
+.color-menu {
+  position: relative;
+}
+.color-pop {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  min-width: 150px;
+}
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(3, 32px);
+  gap: 6px;
+}
+.swatch {
+  width: 32px;
+  height: 26px;
+  padding: 0;
+  border: 3px solid var(--outline);
+  cursor: pointer;
+}
+.swatch:hover {
+  transform: translateY(-2px);
+}
+.swatch.current {
+  outline: 3px dashed var(--outline);
+  outline-offset: 2px;
+}
+.swatch.small {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+  display: inline-block;
+}
+.hl-icon {
+  display: inline-block;
+  padding: 0 4px;
+  border: 2px solid var(--outline);
+  line-height: 1.1;
+}
+.block-options {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.block-option {
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 8px;
+  text-align: left;
+  cursor: pointer;
+  background: var(--cb-bg);
+  border: 2px solid var(--cb-border);
+}
+.block-option:hover,
+.block-option.current {
+  border-color: var(--outline);
+}
+.px-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+  filter: none;
+}
+
+.ProseMirror mark {
+  color: inherit;
+  padding: 1px 2px;
+  box-shadow: 0 2px 0 rgba(59, 35, 20, 0.25);
+}
+
+.ProseMirror .callout {
+  margin: 8px 0;
+  padding: 4px 16px;
+  background: var(--cb-bg);
+  border: 3px solid var(--cb-border);
+  box-shadow:
+    inset 6px 0 0 var(--cb-border),
+    0 3px 0 rgba(59, 35, 20, 0.2);
+  padding-left: 22px;
+}
+.ProseMirror .callout .callout {
+  margin: 4px 0;
+}
+
+/* Renk paleti: hem bloklarda hem menüdeki seçeneklerde kullanılır */
+[data-color='yellow'] {
+  --cb-bg: #fff3b0;
+  --cb-border: #d9a400;
+}
+[data-color='green'] {
+  --cb-bg: #e0f5c8;
+  --cb-border: #4f9d3a;
+}
+[data-color='blue'] {
+  --cb-bg: #d9edff;
+  --cb-border: #3f7fb8;
+}
+[data-color='pink'] {
+  --cb-bg: #ffe2ee;
+  --cb-border: #c95c8a;
+}
+[data-color='orange'] {
+  --cb-bg: #ffe4c7;
+  --cb-border: #d2691e;
+}
+[data-color='purple'] {
+  --cb-bg: #ece2ff;
+  --cb-border: #7b5cc4;
+}

@@ -1,0 +1,59 @@
+{
+  "name": "pixy-note",
+  "version": "0.1.0",
+  "description": "Stardew Valley esintili, sürükle-bıraklı workflow destekli not uygulaması",
+  "private": true,
+  "license": "MIT",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "concurrently -k -n vite,electron -c green,yellow \"vite\" \"wait-on tcp:5173 && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 node scripts/electron.cjs\"",
+    "dev:web": "vite",
+    "build": "tsc && vite build",
+    "start": "npm run build && node scripts/electron.cjs",
+    "dist": "npm run build && electron-builder --linux AppImage",
+    "typecheck": "tsc",
+    "icon": "node scripts/make-icon.cjs",
+    "desktop": "npm run build && node scripts/install-desktop.cjs"
+  },
+  "build": {
+    "appId": "com.pixy.note",
+    "productName": "Pixy Note",
+    "files": [
+      "dist/**",
+      "electron/**"
+    ],
+    "linux": {
+      "category": "Office",
+      "icon": "electron/icon.png"
+    },
+    "directories": {
+      "output": "release"
+    }
+  },
+  "dependencies": {
+    "@fontsource/pixelify-sans": "^5.3.0",
+    "@tiptap/extension-highlight": "^2.27.3",
+    "@tiptap/extension-placeholder": "^2.27.3",
+    "@tiptap/extension-task-item": "^2.27.3",
+    "@tiptap/extension-task-list": "^2.27.3",
+    "@tiptap/pm": "^2.27.3",
+    "@tiptap/react": "^2.27.3",
+    "@tiptap/starter-kit": "^2.27.3",
+    "@xyflow/react": "^12.12.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "concurrently": "^9.2.5",
+    "cross-env": "^7.0.3",
+    "electron": "^41.7.1",
+    "electron-builder": "^26.15.3",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21",
+    "wait-on": "^8.0.5"
+  }
+}
