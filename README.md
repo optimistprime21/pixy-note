@@ -1,5 +1,8 @@
 # Pixy Note 🌱
 
+
+![Pixy Note ekran görüntüsü](docs/screenshot.png)
+
 Stardew Valley estetiğinde kişisel not uygulaması.
 
 ## Çalıştırma
