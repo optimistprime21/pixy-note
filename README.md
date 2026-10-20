@@ -1,6 +1,6 @@
 # Pixy Note 🌱
 
-Stardew Valley esintili, sürükle-bıraklı workflow (akış) çizebilen kişisel not uygulaması.
+Stardew Valley estetiğinde kişisel not uygulaması.
 
 ## Çalıştırma
 
